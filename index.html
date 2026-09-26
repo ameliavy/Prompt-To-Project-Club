@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prompt to Project — De Anza College</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f; --panel:#0f1420; --panel-2:#121826;
+  --blue:#00f0ff; --blue-dim:#0072ff; --navy:#121826;
+  --text:#dff6ff; --muted:#7d8ba1; --line:#1c2637;
+  --glow: 0 0 18px rgba(0,240,255,.45), 0 0 40px rgba(0,114,255,.15);
+  box-sizing:border-box;
+  padding-top: env(safe-area-inset-top,0px);
+  padding-bottom: env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth; scroll-padding-top: env(safe-area-inset-top,0px);}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased;
+  min-height:100%;
+}
+h1,h2,h3,.display{font-family:'Chakra Petch',sans-serif;}
+a{color:inherit;text-decoration:none;}
+::selection{background:var(--blue-dim); color:#000;}
+@media (prefers-reduced-motion: reduce){*{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}}
+
+/* ---- background grid ---- */
+.grid-bg{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,240,255,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 85%);
+}
+.glow-orb{
+  position:fixed; z-index:0; pointer-events:none; border-radius:50%;
+  filter:blur(90px); opacity:.35;
+}
+.glow-orb.a{width:520px;height:520px; background:var(--blue); top:-180px; left:-120px;}
+.glow-orb.b{width:420px;height:420px; background:var(--blue-dim); top:120px; right:-140px; opacity:.25;}
+
+/* ---- nav ---- */
+header{
+  position:sticky; top:0; z-index:20;
+  padding: 16px clamp(18px,4vw,48px);
+  padding-top: calc(16px + env(safe-area-inset-top,0px));
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(10,10,15,.72); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex; align-items:center; gap:10px; font-size:1.05rem; font-weight:600; letter-spacing:.02em;}
+.brand-mark{
+  width:30px;height:30px; border:1.5px solid var(--blue); border-radius:7px;
+  display:grid; place-items:center; color:var(--blue); font-family:'Chakra Petch';
+  box-shadow: inset 0 0 10px rgba(0,240,255,.3);
+}
+.nav-actions{display:flex; align-items:center; gap:10px;}
+.btn{
+  font-family:'Inter',sans-serif; font-size:.88rem; font-weight:600; cursor:pointer;
+  padding:10px 18px; border-radius:8px; border:1px solid var(--line);
+  background:transparent; color:var(--text); transition:border-color .18s, box-shadow .18s, color .18s;
+  display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+}
+.btn.ghost:hover{border-color:var(--blue); color:var(--blue);}
+.btn.primary{
+  background:linear-gradient(135deg, var(--blue-dim), var(--blue)); color:#04131a; border:none;
+  box-shadow: var(--glow);
+}
+.btn.primary:hover{filter:brightness(1.12); transform:translateY(-1px);}
+.btn:focus-visible{outline:2px solid var(--blue); outline-offset:2px;}
+
+main{position:relative; z-index:1;}
+.page{display:none;}
+.page.active{display:block;}
+section{padding: 90px clamp(18px,6vw,64px);}
+.eyebrow{color:var(--blue); font-size:.8rem; letter-spacing:.04em;}
+
+/* ---- hero ---- */
+.hero{
+  min-height:78vh; display:flex; flex-direction:column; justify-content:center;
+  padding-top:120px; text-align:center; align-items:center;
+}
+.hero h1{
+  font-size:clamp(2.6rem, 8.5vw, 6rem); line-height:1.02; margin:0 0 18px;
+  color:#eafcff;
+  text-shadow: 0 0 12px rgba(0,240,255,.75), 0 0 40px rgba(0,240,255,.35), 0 0 90px rgba(0,114,255,.25);
+  letter-spacing:.01em;
+}
+.hero p{
+  max-width:560px; color:var(--muted); font-size:1.08rem; margin:0 auto 34px; line-height:1.6;
+}
+.hero .cta-row{display:flex; gap:14px; flex-wrap:wrap; justify-content:center;}
+
+/* ---- projects ---- */
+.section-head{max-width:640px; margin:0 auto 44px; text-align:center;}
+.section-head h2{font-size:clamp(1.7rem,3.5vw,2.4rem); margin:6px 0 10px;}
+.section-head p{color:var(--muted); margin:0;}
+.card-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:20px; max-width:1080px; margin:0 auto;
+}
+.card{
+  background:linear-gradient(160deg, rgba(18,24,38,.9), rgba(15,20,32,.7));
+  border:1px solid var(--line); border-radius:12px; padding:26px 22px;
+  min-height:190px; display:flex; flex-direction:column; justify-content:space-between;
+  transition:border-color .2s, box-shadow .2s;
+}
+.card:hover{border-color:rgba(0,240,255,.4); box-shadow:0 0 24px rgba(0,240,255,.08);}
+.card .slot{
+  width:34px;height:34px;border-radius:7px;border:1px dashed var(--muted);
+  display:grid;place-items:center; color:var(--muted); font-size:.75rem;
+}
+.card .card-title{font-weight:600; margin-top:16px; color:var(--text);}
+.card .card-sub{color:var(--muted); font-size:.85rem; margin-top:4px;}
+.empty-note{
+  max-width:1080px; margin:26px auto 0; text-align:center; padding:16px 20px;
+  border:1px solid var(--line); border-radius:10px; color:var(--blue); font-size:.92rem;
+  background:rgba(0,240,255,.04);
+}
+
+/* ---- schedule table ---- */
+.table-wrap{
+  max-width:820px; margin:0 auto; border:1px solid var(--line); border-radius:12px;
+  overflow:hidden; background:rgba(15,20,32,.6);
+}
+table{width:100%; border-collapse:collapse;}
+th,td{padding:16px 18px; text-align:left; font-size:.92rem;}
+thead th{
+  color:var(--blue); font-family:'Chakra Petch'; font-weight:600; font-size:.82rem;
+  border-bottom:1px solid var(--line); background:rgba(0,240,255,.05);
+}
+tbody tr + tr td{border-top:1px solid var(--line);}
+tbody td{color:var(--muted);}
+.tba{color:var(--blue-dim); font-weight:600;}
+
+footer{
+  text-align:center; padding:34px 18px calc(34px + env(safe-area-inset-bottom,0px));
+  color:var(--muted); font-size:.85rem; border-top:1px solid var(--line);
+}
+
+/* ---- join page ---- */
+.join-wrap{max-width:620px; margin:0 auto; padding-top:60px;}
+.join-head{text-align:center; margin-bottom:38px;}
+.join-head h1{font-size:clamp(1.9rem,4.5vw,2.6rem); margin:8px 0 10px;
+  text-shadow:0 0 20px rgba(0,240,255,.4);}
+.join-head p{color:var(--muted);}
+.panel{
+  background:rgba(15,20,32,.72); border:1px solid var(--line); border-radius:16px;
+  padding:clamp(22px,4vw,40px); backdrop-filter:blur(6px);
+}
+.field{margin-bottom:20px;}
+.field label{display:block; font-size:.85rem; color:var(--muted); margin-bottom:7px;}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+input[type=text], input[type=email]{
+  width:100%; background:#0a0f1a; border:1px solid var(--line); border-radius:8px;
+  padding:12px 14px; color:var(--text); font-size:.95rem; font-family:'Inter';
+  transition:border-color .18s, box-shadow .18s;
+}
+input:focus{outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,240,255,.12);}
+.radio-group{display:flex; flex-wrap:wrap; gap:10px;}
+.radio-pill{
+  border:1px solid var(--line); border-radius:20px; padding:9px 16px; font-size:.85rem;
+  cursor:pointer; color:var(--muted); transition:all .16s; user-select:none;
+}
+.radio-pill input{display:none;}
+.radio-pill.active{border-color:var(--blue); color:var(--blue); box-shadow:0 0 12px rgba(0,240,255,.18);}
+.hint{color:var(--muted); font-size:.78rem; margin-top:6px;}
+.form-actions{display:flex; flex-direction:column; gap:12px; margin-top:8px;}
+.btn.block{width:100%; justify-content:center; padding:14px;}
+.btn.discord{background:#111a2c; border:1px solid #2a3a5c; color:#9fc4ff;}
+.btn.discord:hover{border-color:var(--blue); color:var(--blue);}
+
+/* ---- modal ---- */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(4,6,10,.75); backdrop-filter:blur(3px);
+  display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
+}
+.modal-overlay.active{display:flex;}
+.modal{
+  max-width:400px; width:100%; background:var(--panel-2); border:1px solid var(--blue);
+  border-radius:14px; padding:32px 28px; text-align:center; box-shadow:var(--glow);
+}
+.modal h3{margin:0 0 10px; font-size:1.3rem;}
+.modal p{color:var(--muted); font-size:.92rem; line-height:1.55; margin:0 0 22px;}
+
+@media (max-width:560px){
+  .row2{grid-template-columns:1fr;}
+  section{padding:64px 18px;}
+  .nav-actions .btn span.full{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="glow-orb a"></div>
+<div class="glow-orb b"></div>
+
+<header>
+  <a href="#home" class="brand" onclick="showPage('home')">
+    <span class="brand-mark">P2P</span>
+    Prompt to Project
+  </a>
+  <div class="nav-actions">
+    <a class="btn ghost" href="https://discord.gg/NBCRC3wxR" target="_blank" rel="noopener">Discord</a>
+    <a class="btn primary" href="#join" onclick="showPage('join')">Become a Member</a>
+  </div>
+</header>
+
+<main>
+  <!-- HOME PAGE -->
+  <div class="page active" id="page-home">
+    <section class="hero">
+      <div class="eyebrow">DE ANZA COLLEGE · STUDENT CLUB</div>
+      <h1 class="display">PROMPT TO<br>PROJECT</h1>
+      <p>De Anza's vibe coding &amp; AI project club — where a prompt becomes a prototype and a prototype becomes something you actually ship.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#join" onclick="showPage('join')">Become a Member</a>
+        <a class="btn ghost" href="https://discord.gg/NBCRC3wxR" target="_blank" rel="noopener">Join our Discord</a>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="section-head">
+        <div class="eyebrow">SHOWCASE</div>
+        <h2>Projects &amp; Showcases</h2>
+        <p>What our members are building, once the first cohort ships.</p>
+      </div>
+      <div class="card-grid">
+        <div class="card"><div class="slot">?</div><div><div class="card-title">Project slot 01</div><div class="card-sub">Reserved for cohort one</div></div></div>
+        <div class="card"><div class="slot">?</div><div><div class="card-title">Project slot 02</div><div class="card-sub">Reserved for cohort one</div></div></div>
+        <div class="card"><div class="slot">?</div><div><div class="card-title">Project slot 03</div><div class="card-sub">Reserved for cohort one</div></div></div>
+      </div>
+      <div class="empty-note">Future project showcase coming soon — we're currently building our first cohort of projects.</div>
+    </section>
+
+    <section id="schedule">
+      <div class="section-head">
+        <div class="eyebrow">SCHEDULE</div>
+        <h2>Club Meeting Hours</h2>
+        <p>Our regular meeting schedule, finalized soon.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Time</th><th>Activity / Topic</th></tr></thead>
+          <tbody>
+            <tr><td class="tba">TBA</td><td class="tba">TBA</td><td>To be announced</td></tr>
+            <tr><td class="tba">TBA</td><td class="tba">TBA</td><td>To be announced</td></tr>
+            <tr><td class="tba">TBA</td><td class="tba">TBA</td><td>To be announced</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>© 2026 Prompt to Project · De Anza College</footer>
+  </div>
+
+  <!-- JOIN PAGE -->
+  <div class="page" id="page-join">
+    <section>
+      <div class="join-wrap">
+        <a class="btn ghost" href="#home" onclick="showPage('home')" style="margin-bottom:30px; display:inline-flex;">← Home</a>
+        <div class="join-head">
+          <div class="eyebrow">MEMBERSHIP</div>
+          <h1 class="display">Join Prompt to Project</h1>
+          <p>Fill out the form below to become an official member.</p>
+        </div>
+
+        <form class="panel" id="join-form">
+          <div class="field row2">
+            <div><label for="fname">First name</label><input type="text" id="fname" required></div>
+            <div><label for="lname">Last name</label><input type="text" id="lname" required></div>
+          </div>
+          <div class="field">
+            <label for="major">Major</label>
+            <input type="text" id="major" placeholder="e.g. Computer Science" required>
+          </div>
+          <div class="field">
+            <label>Experience level</label>
+            <div class="radio-group" id="exp-group">
+              <label class="radio-pill active"><input type="radio" name="exp" value="Beginner" checked>Beginner</label>
+              <label class="radio-pill"><input type="radio" name="exp" value="Intermediate">Intermediate</label>
+              <label class="radio-pill"><input type="radio" name="exp" value="Advanced">Advanced</label>
+              <label class="radio-pill"><input type="radio" name="exp" value="Just Vibe Coding">Just Vibe Coding</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" required>
+          </div>
+          <div class="field">
+            <label for="linkedin">LinkedIn profile (optional)</label>
+            <input type="text" id="linkedin" placeholder="linkedin.com/in/...">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn primary block">Submit Application</button>
+            <a class="btn discord block" href="https://discord.gg/NBCRC3wxR" target="_blank" rel="noopener">Join Discord</a>
+          </div>
+        </form>
+      </div>
+    </section>
+    <footer>© 2026 Prompt to Project · De Anza College</footer>
+  </div>
+</main>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3>You're in! 🎉</h3>
+    <p>Thanks for applying to Prompt to Project. Head over to our Discord to introduce yourself and get plugged into the club.</p>
+    <a class="btn discord block" href="https://discord.gg/NBCRC3wxR" target="_blank" rel="noopener">Join Discord</a>
+    <button class="btn ghost block" style="margin-top:10px;" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  window.scrollTo(0,0);
+}
+// radio pill styling
+document.querySelectorAll('#exp-group input').forEach(inp=>{
+  inp.addEventListener('change', ()=>{
+    document.querySelectorAll('.radio-pill').forEach(p=>p.classList.remove('active'));
+    inp.closest('.radio-pill').classList.add('active');
+  });
+});
+document.getElementById('join-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  const entry = {
+    firstName: document.getElementById('fname').value,
+    lastName: document.getElementById('lname').value,
+    major: document.getElementById('major').value,
+    experience: document.querySelector('input[name=exp]:checked').value,
+    email: document.getElementById('email').value,
+    linkedin: document.getElementById('linkedin').value,
+    submittedAt: new Date().toISOString()
+  };
+  try{
+    const key='p2p_members';
+    const existing = JSON.parse(localStorage.getItem(key) || '[]');
+    existing.push(entry);
+    localStorage.setItem(key, JSON.stringify(existing));
+  }catch(err){ console.error('Could not save locally', err); }
+  document.getElementById('modal').classList.add('active');
+  this.reset();
+  document.querySelectorAll('.radio-pill').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.radio-pill').classList.add('active');
+});
+function closeModal(){ document.getElementById('modal').classList.remove('active'); }
+
+// hash routing
+window.addEventListener('hashchange', ()=>{
+  const h = location.hash.replace('#','');
+  if(h==='join') showPage('join'); else showPage('home');
+});
+if(location.hash==='#join') showPage('join');
+</script>
+</body>
+</html>
